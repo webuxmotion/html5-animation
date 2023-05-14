@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>01-wave</title>
+    <link rel="stylesheet" href="../include/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+    <script src="../include/utils.js"></script>
+    <script src="./01-dat-gui.js"></script>
+    <script src="01-wave.js"></script>
+  </head>  
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <script>
+    window.onload = function () {
+      const { canvas, context } = utils.getCanvas('canvas', { resize: true });
+
+      console.log(Math.sin((45 * (Math.PI / 180))));
+      const { gui, obj } = runGui();
+
+      console.log(obj.maxSize);
+
+      const waves = [
+        new Wave({ centerY: 50 }),
+        new Wave({ centerY: 100 }),
+        new Wave({ centerY: 200, reverse: true }),
+        new Wave({ centerY: 250 }),
+      ];
+        
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        waves[0].yspeed = obj.yspeed;
+
+        waves.forEach(el => el.draw(context));
+      }());
+    };
+    </script>
+  </body>
+</html>

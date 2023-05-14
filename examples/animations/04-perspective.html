@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>01-wave</title>
+    <link rel="stylesheet" href="../include/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+    <script src="../include/utils.js"></script>
+    <script src="./04-init-gui.js"></script>
+    <script src="01-wave.js"></script>
+    <script src="./classes/ball.js"></script>
+  </head>  
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <script>
+    window.onload = function () {
+      const { canvas, context } = utils.getCanvas('canvas');
+      const ball = new Ball();
+
+      let angle = 0;
+      let radius = 50;
+      let vpX = canvas.width / 2;
+      let vpY = canvas.height / 2;
+
+      let data = {
+        fl: 250,
+        zpos: 100,
+        speed: 0.1,
+        centerX: canvas.width / 2,
+        centerY: canvas.height / 2,
+      };
+
+      initGui(data);
+
+      ball.radius = 10;
+      
+      (function drawFrame () {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        window.requestAnimationFrame(drawFrame, canvas);
+
+        ball.x = data.centerX + Math.cos(angle) * radius;
+        ball.y = data.centerY + Math.sin(angle) * radius;
+        angle += data.speed;
+
+        ball.x = ball.x - vpX;
+        ball.y = ball.y - vpY;
+
+        const scale = data.fl / (data.fl + data.zpos);
+
+        ball.scaleX = ball.scaleY = scale;
+        ball.x = vpX + ball.x * scale;
+        ball.y = vpY + ball.y * scale;
+
+        if (data.zpos > -data.fl) {
+            ball.visible = true;
+        } else {
+            ball.visible = false;
+        }
+
+        if (ball.visible) {
+            ball.draw(context);
+        }
+      }());
+    };
+    </script>
+  </body>
+</html>
