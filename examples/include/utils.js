@@ -37,6 +37,26 @@ if (!window.cancelAnimationFrame) {
  */
 window.utils = {};
 
+window.utils.getCanvas = (id, props) => {
+  const resizeCanvas = (canvas) => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+  }
+  const canvas = document.getElementById(id);
+  const context = canvas.getContext('2d');
+  if (props?.resize) {
+    resizeCanvas(canvas);
+    window.addEventListener('resize', function(event) {
+      resizeCanvas(canvas);
+    }, true);
+  }
+
+  return {
+    canvas,
+    context,
+  }
+}
+
 /**
  * Keeps track of the current mouse position, relative to an element.
  * @param {HTMLElement} element
