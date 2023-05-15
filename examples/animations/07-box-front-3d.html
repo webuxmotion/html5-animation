@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>07-box-front-3d</title>
+    <link rel="stylesheet" href="../include/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+  </head>
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <script src="../include/utils.js"></script>
+    <script src="./07-dat-gui.js"></script>
+    <script>
+      window.onload = function () {
+        const { canvas, context } = utils.getCanvas("canvas");
+
+        let data = {
+          fl: 250,
+          vpX: canvas.width / 2,
+          vpY: canvas.height / 2,
+        };
+
+        initGui(data);
+
+        const points = [
+          { x: 0 - data.vpX, y: 0 - data.vpY, z: 0 },
+          { x: 0 - data.vpX, y: 0 - data.vpY, z: 400 },
+          { x: 400 - data.vpX, y: 0 - data.vpY, z: 400 },
+          { x: 400 - data.vpX, y: 0 - data.vpY, z: 0 },
+        ];
+
+        const points2 = [
+          { x: 0 - data.vpX, y: 400 - data.vpY, z: 0 },
+          { x: 0 - data.vpX, y: 400 - data.vpY, z: 400 },
+          { x: 400 - data.vpX, y: 400 - data.vpY, z: 400 },
+          { x: 400 - data.vpX, y: 400 - data.vpY, z: 0 },
+        ];
+
+        const points3 = [
+          { x: 0 - data.vpX, y: 0 - data.vpY, z: 400 },
+          { x: 0 - data.vpX, y: 400 - data.vpY, z: 400 },
+        ];
+
+        const points4 = [
+          { x: 400 - data.vpX, y: 0 - data.vpY, z: 400 },
+          { x: 400 - data.vpX, y: 400 - data.vpY, z: 400 },
+        ];
+
+        const drawLines = (points) => {
+            context.beginPath();
+
+            points.forEach((el, index) => {
+              if (el.z > -data.fl) {
+                const scale = data.fl / (data.fl + el.z);
+                const x = data.vpX + el.x * scale;
+                const y = data.vpY + el.y * scale;
+
+                if (index === 0) {
+                  context.moveTo(x, y);
+                } else {
+                  context.lineTo(x, y);
+                }
+              }
+            });
+
+            context.stroke();
+          };
+
+        (function drawFrame() {
+          window.requestAnimationFrame(drawFrame, canvas);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+          drawLines(points);
+          drawLines(points2);
+          drawLines(points3);
+          drawLines(points4);
+        })();
+      };
+    </script>
+  </body>
+</html>
