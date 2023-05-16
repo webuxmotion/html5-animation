@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>09-gen-art-circles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabin:wght@600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../include/style.css">
+    <script src="../include/utils.js"></script>
+    <script src="./classes/ball.js"></script>
+    <style>
+      .logo {
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateY(-7vw) translateX(-50%);
+        font-size: 5vw;
+        line-height: 80px;
+        font-family: 'Cabin', sans-serif;
+        user-select: none;
+        text-align: center;
+      }
+    </style>
+  </head>  
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <h1 class="logo">Xantory Games</h1>
+    <script>
+    window.onload = function () {
+      const { canvas, context, clearCanvas } = utils.getCanvas('canvas', { resize: true });
+
+      const boxSize = 100;
+      const colors = ["#332259", "#4C17BF", "#D95103", "#F3C53C", "#B3E0F3"];
+      let totalItems = 0;
+      let points = [];
+      let balls = [];
+      let angle = 0;
+      const speed = 0.01;
+      let countX;
+      let countY;
+      let offsetX;
+      let offsetY;
+
+      const init = () => {
+        countX = Math.floor(canvas.width / boxSize);
+        countY = Math.floor(canvas.height / boxSize);
+
+        offsetX = (canvas.width - countX * boxSize) / 2;
+        offsetY = (canvas.height - countY * boxSize) / 2;
+      }
+
+      init();
+
+      const generateBalls = () => {
+        points = [];
+        balls = [];
+
+        for (let i = 0; i < countX; i++) {
+            for (let j = 0; j < countY; j++) {
+                const coords = {
+                    x: i * boxSize + offsetX + boxSize / 2,
+                    y: j * boxSize + offsetY + boxSize / 2,
+                };
+
+                if (countY % 2) {
+                  if (
+                    j !== Math.floor(countY / 2)
+                  ) {
+                    points.push(coords);
+                  } else if (
+                    i < Math.floor(countX / 2) - 3 ||
+                    i > Math.floor(countX / 2) + 3
+                  ) {
+                    points.push(coords);
+                  }
+                } else {
+                  if (
+                    j !== Math.floor(countY / 2) && 
+                    j !== Math.floor(countY / 2) - 1
+                  ) {
+                    points.push(coords);
+                  }
+                }
+                
+                
+            }
+        }
+
+        points.forEach(el => {
+          const ball = new Ball();
+          ball.color = colors[Math.floor(Math.random() * (colors.length))];
+          ball.radius = Math.floor(Math.random() * (boxSize / 2 - 10));
+          ball.angle = 0;
+          ball.x = el.x;
+          ball.y = el.y;
+          ball.centerX = el.x;
+          ball.centerY = el.y;
+          ball.speed = 0.01 * Math.floor(Math.random() * 5);
+          ball.lineWidth = 0;
+          balls.push(ball);
+        });
+      }
+
+      window.addEventListener('click', () => {
+        generateBalls();
+      }, false);
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        clearCanvas();
+
+        context.fillStyle = "#241B1E";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        init();
+
+        if (totalItems !== countX * countY) {
+            totalItems = countX * countY;
+
+            generateBalls();
+        }
+
+        balls.forEach((el) => {
+            el.y = el.centerY + Math.sin(el.angle) * 5;
+            el.angle += el.speed;
+            el.draw(context);
+        });
+
+        angle += speed;
+
+
+      }());
+    };
+    </script>
+  </body>
+</html>

@@ -51,9 +51,14 @@ window.utils.getCanvas = (id, props) => {
     }, true);
   }
 
+  const clearCanvas = () => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
   return {
     canvas,
     context,
+    clearCanvas,
   }
 }
 

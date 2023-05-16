@@ -11,6 +11,7 @@ aside, footer, header, nav, section {
 body {
   background-color: #bbb;
   color: #383838;
+  margin: 0;
 }
 
 #canvas {
